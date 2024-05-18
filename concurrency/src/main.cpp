@@ -9,6 +9,6 @@ int main()
 {
     // test_safe_queue();
     // test_thread_pool();
-    test_quick_sort();
+    // test_quick_sort();
     return 0;
 }

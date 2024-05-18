@@ -154,8 +154,6 @@ void test_parallel_quick_sort()
 }
 
 /* 线程池版本 */
-// 线程池版本
-// 并行版本
 template <typename T>
 std::list<T> thread_pool_quick_sort(std::list<T> input)
 {
