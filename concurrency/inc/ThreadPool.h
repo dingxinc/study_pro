@@ -22,16 +22,6 @@ public:
 
     using Task = std::packaged_task<void()>;
 
-    ThreadPool(unsigned int num = 5)
-    {
-        if (num < 1)
-            thread_num_ = 1;
-        else
-            thread_num_ = num;
-
-        start();
-    }
-
     ~ThreadPool()
     {
         stop();
@@ -63,7 +53,22 @@ public:
         return ret;
     }
 
+    int idleThreadCount()
+    {
+        return thread_num_;
+    }
+
 private:
+    ThreadPool(unsigned int num = 5)
+    {
+        if (num < 1)
+            thread_num_ = 1;
+        else
+            thread_num_ = num;
+
+        start();
+    }
+
     void start()
     {
         for (int i = 0; i < thread_num_; ++i)
@@ -110,3 +115,23 @@ private:
     std::queue<Task> tasks_;
     std::vector<std::thread> pool_;
 };
+
+void test_thread_pool()
+{
+    int m = 0;
+    ThreadPool::getInstance()->commit([](int &m)
+                                      {
+		m = 1024;
+		std::cout << "inner set m is " << m << std::endl; }, m);
+
+    std::this_thread::sleep_for(std::chrono::seconds(3)); /* 实际放在主线程 main 函数中 */
+    std::cout << "m is " << m << std::endl;
+
+    std::this_thread::sleep_for(std::chrono::seconds(3)); /* 实际放在主线程，main 函数中*/
+    ThreadPool::getInstance()->commit([](int &m)
+                                      {
+		m = 1024;
+		std::cout << "inner set m is " << m << std::endl; }, std::ref(m));
+    std::this_thread::sleep_for(std::chrono::seconds(3)); /* 实际放在主线程，main 函数中*/
+    std::cout << "m is " << m << std::endl;
+}
