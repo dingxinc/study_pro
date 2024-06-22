@@ -35,6 +35,9 @@ public:
     }
 };
 
+template <typename T>
+std::shared_ptr<T> Singleton<T>::_instance = nullptr;
+
 /* 静态成员变量应该在 .cpp 文件中初始化 */
 /* template <typename T>
    std::shared_ptr<T> Singleton<T>::_instance = nullptr;  */
