@@ -73,6 +73,7 @@ private:
     {
         for (int i = 0; i < thread_num_; ++i)
         {
+            // emplace_back 会在 vector 的指定位置调用线程的构造函数，线程的构造所需要的参数就是一个 lambda 表达式
             pool_.emplace_back([this]()
                                {
                 while (!this->stop_.load()) {
